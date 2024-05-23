@@ -1,2 +1,7 @@
 # ParserHostFile
-PowerShell script for the hosts file parser in Windows OS
+
+Данный скрипт предназначен для проверки на синтаксически правельно созданный файл host.  
+
+## Использование
+
+Запустить скрипт указав путь к файлу в переменную `$location_file`.
