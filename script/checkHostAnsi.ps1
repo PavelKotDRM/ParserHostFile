@@ -1,4 +1,4 @@
-$location_file = "$env:SystemDrive\Windows\System32\Drivers\etc\hosts"# # Path to file hosts "$env:SystemDrive\Windows\System32\Drivers\etc\hosts"
+$location_file = "$env:SystemDrive\Windows\System32\Drivers\etc\hosts" # Path to file hosts
 $Pattern = [Regex]'^\s*(?<Address>[0-9.:]+)\s+(?<Host>[\w.-]+)' # Regex to match adress and host
 
 $Heading = @("# Copyright (c) 1993-2009 Microsoft Corp.",
@@ -24,7 +24,7 @@ $Heading = @("# Copyright (c) 1993-2009 Microsoft Corp.",
 "#	::1             localhost")
 
 
-$Pattern�omments = [Regex]'(?<comment>^#+.+$)|(?<commentNull>#$)' # Regex to match comments
+$PatternComments = [Regex]'(?<comment>^#+.+$)|(?<commentNull>#$)' # Regex to match comments
 #$Pattern = [Regex]'^\s*(?<Address>[0-9.:]+)\s+(?<Host>[\w.-]+)|(?<comment>#+.+$)|(?<commentNull>#$)' # Regex to match adress, host and comments
 #$PatternAdress = [Regex]'(?<Address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(?<Address>::\d{0,3})' # Regex to match adress
 #$PatternHosts = [Regex]'(?(?<=(^\s*(?<Address>[0-9.:]+\s+)))(?<Host>[\w.-]+)|&)' # Regex to match host
@@ -33,10 +33,10 @@ $file = Get-Content $location_file
 $lenth = $file.Length
 if ($lenth -eq 21){
     if($file[0] -eq $Heading[0] -or $file[20] -ne $Heading[20]){
-        "���� host ������ � �������� ������ ���������"
+        "Файл host пустой и содержит только заголовок"
     }
     else{
-        Write-Host "���� ������������� �������. ������ �:" -ForegroundColor red -BackgroundColor Black
+        Write-Host "Файл синтаксически неверен. Ошибка в:" -ForegroundColor red -BackgroundColor Black
         foreach ($i in 0..($lenth-1)) {
             $boolEq = $file[$i] -eq $Heading[$i]
             Write-Host  ("{0}: {1}" -f $boolEq, $file[$i])  -ForegroundColor red -BackgroundColor Black
@@ -57,7 +57,7 @@ elseif($lenth -lt 21){
 }
 else{
     if($file[0] -ne $Heading[0] -or $file[20] -ne $Heading[20]){
-        Write-Host "���� ������������� �������" -ForegroundColor red -BackgroundColor Black
+        Write-Host "Файл синтаксически неверен" -ForegroundColor red -BackgroundColor Black
         foreach ($i in 0..($lenth-1)) {
             $boolEq = $file[$i] -eq $Heading[$i]
             Write-Host  ("{0}: {1}" -f $boolEq, $file[$i])  -ForegroundColor red -BackgroundColor Black
@@ -73,8 +73,8 @@ else{
                 Write-Host ("{0}: {1}" -f $i, "OK") -ForegroundColor green -BackgroundColor Black
             }
             else{
-                if ($file[$i] -match $Pattern�omments){
-                    Write-Host ("{0}: ({1}) {2}" -f $i, "�����������", $file[$i]) -ForegroundColor yellow -BackgroundColor Black
+                if ($file[$i] -match $PatternComments){
+                    Write-Host ("{0}: ({1}) {2}" -f $i, "Комментарий", $file[$i]) -ForegroundColor yellow -BackgroundColor Black
                 }
                 else{
                     Write-Host ("{0}: {1}" -f $i, $file[$i]) -ForegroundColor red -BackgroundColor Black
@@ -83,10 +83,10 @@ else{
             }
         }
         if ($ErrorArray.Length -eq 0){
-            Write-Host "��� ������ � ����� ������������� �����" -ForegroundColor green -BackgroundColor Black
+            Write-Host "Все строки в файле синтаксически верны" -ForegroundColor green -BackgroundColor Black
         }
         else{
-            Write-Host "� ����� ���� ������ ������������� �������� � �������� : " -ForegroundColor red -BackgroundColor Black
+            Write-Host "В файле есть строки синтаксически неверные в строчках : " -ForegroundColor red -BackgroundColor Black
             Write-Host  $ErrorArray -Separator ", "  -ForegroundColor red -BackgroundColor Black
         }
     }
